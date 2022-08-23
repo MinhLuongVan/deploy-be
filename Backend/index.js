@@ -23,7 +23,7 @@ app.use('/td1/list',todoRouter);
 const connectdb = async() => {
     try {
 
-        await mongoose.connect('') 
+        await mongoose.connect('mongodb://localhost:27017/ListToDo1') 
         console.log("Kết nối thành công");  
     } catch (error) {
         console.log("Kết nối thất bại");
