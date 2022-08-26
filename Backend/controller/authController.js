@@ -1,7 +1,6 @@
 const User = require('../model/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { use } = require('../router/auth');
 const authController = {
     registerUser : async(req,res) =>{
         try {
@@ -11,7 +10,8 @@ const authController = {
             // create user
 
             const newUser =  new User({
-                fullname:req.body.fullname,
+                first:req.body.firstname,
+                lastname:req.body.lastname,
                 username: req.body.username,
                 password:hashed,
             });

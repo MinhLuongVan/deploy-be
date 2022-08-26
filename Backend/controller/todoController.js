@@ -8,7 +8,8 @@ const User = require('../model/userModel');
      getListPage : async(req,res) =>{
         try {
             let page;
-            if(req.query.page){
+            if(!isNaN(req.query.page)){
+
                 page = parseInt(req.query.page);
             }else{
                 page = 1;
@@ -45,7 +46,7 @@ const User = require('../model/userModel');
             
         });
         const todolist = await newToDo.save();
-        res.status(200).json("Create success");
+        res.status(200).json(todolist);
        } catch (error) {
         res.status(500).json(error)
        }
@@ -56,47 +57,68 @@ const User = require('../model/userModel');
         try {
             const todo = await ListTD.findByIdAndDelete(req.params.id);
             res.status(200).json("Delete success");
-            
         } catch (error) {
             res.status(500).json(error);
+          
         }
     },
 
     //delete all todo
-    deleteAllList : async(req,res) =>{
-        try {
-            const isAdmin = req.user.isAdmin;
-            if(isAdmin){
-            const todo = await ListTD.find().deleteMany();
-            res.status(200).json("Delete all success");
-            }else {
-                const todo = await ListTD.find({ owner: req.user.id }).deleteMany();
-                res.status(200).json("Delete all success");
-            }
+    // deleteAllList : async(req,res) =>{
+    //     try {
+    //         const isAdmin = req.user.isAdmin;
+    //         if(isAdmin){
+    //         const todo = await ListTD.find().deleteMany();
+    //         res.status(200).json("Delete all success");
+    //         }else {
+    //             const todo = await ListTD.find({ owner: req.user.id }).deleteMany();
+    //             res.status(200).json("Delete all success");
+    //         }
             
+    //     } catch (error) {
+    //         res.status(500).json(error);
+    //     }
+        
+    // },
+
+    findOneTodo : async(req,res) => {
+        try {
+            const todo = await ListTD.findById(req.params.id)
+            res.status(200).json({
+                data:todo,
+                message :"Thành công"
+            })
+    
         } catch (error) {
             res.status(500).json(error);
         }
-        
     },
 
     // update todo
     updateList : async(req,res) => {
         try {
-            const itemUpdate = await ListTD.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) });
+            const itemUpdate = await ListTD.findOneAndUpdate({_id:req.params.id} ,
+            {$set:req.body},
+            {new:true})
+            res.json({
+                data:itemUpdate,
+                message:" Update thành công"
+            })
 
-            if (itemUpdate) {
-                const item = req.body;
-                itemUpdate.title = item.title;
-                itemUpdate.status = item.status;
-                await itemUpdate.save();
-                res.status(200).json({ user: itemUpdate.toJSON(), item: item });
-            } else {
-                res.status(400).json("False")
-            }
+            // if (itemUpdate) {
+            //     const item = req.body;
+            //     itemUpdate.title = item.title;
+            //     itemUpdate.status = item.status;
+            //     await itemUpdate.save();
+            //     res.status(200).json({ user: itemUpdate.toJSON(), item: item });
+            // } else {
+            //     res.status(400).json("False")
+            // }
         } catch (error) {
             res.status(500).json(error);
         }
     }
+
+
   }
   module.exports = ListTDController;

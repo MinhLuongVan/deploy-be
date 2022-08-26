@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 const authRouter = require('./router/auth')
 const userRouter = require('./router/userRouter')
 const todoRouter = require('./router/todoRouter')
+
 const app = express()
 const corsOptions = {
     //origin: "http://103.56.162.78:3000",
@@ -23,7 +24,7 @@ app.use('/td1/list',todoRouter);
 const connectdb = async() => {
     try {
 
-        await mongoose.connect('') 
+        await mongoose.connect('mongodb+srv://luongminh:luongminh99@cluster0.wx8mw25.mongodb.net/ListTodo?retryWrites=true&w=majority') ;
         console.log("Kết nối thành công");  
     } catch (error) {
         console.log("Kết nối thất bại");

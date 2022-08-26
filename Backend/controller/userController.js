@@ -2,6 +2,19 @@ const User = require('../model/userModel');
 const ListTD = require('../model/listModel')
 const userController = {
 
+  //get userID
+  getUsersID : async(req,res) =>{
+    const {userID} = req.params;
+    const user = await User.findById(userID);
+    res.status(200).json({user})
+},
+
+
+getUserTDList : async(req,res) => {
+    const {userID } =  req.params;
+    const user = await User.findById(userID).populate('tdlist');
+    res.status(200).json({tdlist: user.tdlist});
+},
     // get all user
     getAllUsers : async(req,res)=>{
         try { 
@@ -14,7 +27,7 @@ const userController = {
             }
             
         } catch (error) {
-            res.status(500).json(error); //phẩn hồi xảy ra khi có sự cố
+            res.status(500).json(error); 
         } 
     },
 
